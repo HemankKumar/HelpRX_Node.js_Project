@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+
+    <!----------------Angular cdn---------------------->
+
+    <script src="script/angular.min.js"></script>
+
+    <!------------------------------------------------->
+
+    <script>
+        var modulde = module.angular("mymodule", [])
+        module.controller("mycontroller", function ($scritp) {
+            $script.c = "32";
+            $script.java = "";
+            $script.python = "";
+            $script.csharp = "";
+            $script.total;
+            $script.dototal=function(){
+                $script.total=$script.c+$script.java+$script.python+$script.csharp;
+
+            }
+            
+
+            
+
+
+
+        })
+
+
+    </script>
+</head>
+
+<body ng-app="mymodule" ng-controller="mycontroller">
+    <center>
+        <p>
+            Enter C marks = <input type="text" ng-model="c">
+        </p><br>
+        <p>
+            Enter java marks = <input type="text" ng-model="java">
+        </p><br>
+        <p>
+            Enter Python marks = <input type="text" ng-model="python">
+        </p><br>
+        <p>
+            Enter Csharp marks = <input type="text" ng-model="csharp">
+        </p><br>
+        <p>
+            <input type="button" value="total" ng-click="dototal">
+        </p><br>
+
+        <p>
+            {{c}};
+        </p>
+        
+
+    </center>
+
+</body>
+
+</html>

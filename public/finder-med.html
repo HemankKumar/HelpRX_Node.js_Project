@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find Medicine</title>
+
+  <!-- Angular -->
+  <script src="script/angular.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- JQuery Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+  <script>
+    var module = angular.module("myModule", []);
+    module.controller("myController", function ($scope, $http) {
+
+      // --------- Dark Mode ----------
+      $scope.isDark = localStorage.getItem("theme") === "dark";
+      $scope.toggleTheme = function () {
+        $scope.isDark = !$scope.isDark;
+        localStorage.setItem("theme", $scope.isDark ? "dark" : "light");
+      };
+
+      // --------- Fetch Cities ----------
+      $scope.fetchCities = function () {
+        $http.get("/get-angular-city-records").then(
+          function (resp) { $scope.cityJSONAry = resp.data; },
+          function (err) { alert(err.data); }
+        );
+      }
+
+      // --------- Fetch Medicines ----------
+      $scope.fetchMeds = function () {
+        $http.get("/get-angular-med-records").then(
+          function (resp) { $scope.medJSONAry = resp.data; },
+          function (err) { alert(err.data); }
+        );
+      }
+
+      // --------- Fetch Donors ----------
+      $scope.loading = false;
+      $scope.fetchDonors = function () {
+        $scope.loading = true;
+        $scope.JsonArr3 = [];
+
+        var url = "/fetch-donors?medKuch=" + $scope.selMed.medicinename +
+          "&cityKuch=" + $scope.selCity.city;
+
+        $http.get(url).then(
+          function (resp) {
+            $scope.JsonArr3 = resp.data;
+            $scope.loading = false;
+          },
+          function (err) {
+            alert(err.data);
+            $scope.loading = false;
+          }
+        );
+      }
+
+      
+    });
+
+
+
+    //AI Medicine Recommendations
+  function getAI(){
+   $.post("/ai-recommend",
+    { symptoms: $("#symptoms").val() },
+    function(res){
+      $("#result").html(`
+        Disease: ${res.disease}<br>
+        Medicine: ${res.medicine}
+      `);
+    });
+  }
+
+  
+  </script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fdfbfb, #ebedee);
+      transition: 0.3s;
+    }
+
+    body.dark {
+      background: #121212;
+      color: #f1f1f1;
+    }
+
+    body.dark .card,
+    body.dark .filter-card {
+      background: #1e1e1e;
+      color: #f1f1f1;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 12px 20px;
+    }
+
+    .navbar h2 {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Filter */
+    .filter-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      margin-top: 25px;
+    }
+
+    /* Cards */
+    .donor-card {
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      transition: 0.3s;
+    }
+
+    .donor-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .donor-card img {
+      height: 170px;
+      object-fit: contain;
+      padding: 15px;
+    }
+
+    /* Loader */
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #ccc;
+      border-top: 5px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: auto;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Mobile tweaks */
+    @media(max-width:768px) {
+      .navbar h2 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body ng-app="myModule"
+      ng-controller="myController"
+      ng-init="fetchCities();fetchMeds();"
+      ng-class="{'dark': isDark}">
+
+  <!-- Navbar -->
+  <nav class="navbar d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <img src="pics/Navbarlogo-2.png" width="75" height="60">
+      <h2 class="ms-3">Find Medicines</h2>
+    </div>
+    <button class="btn btn-outline-light" ng-click="toggleTheme()">
+      <i class="bi" ng-class="isDark ? 'bi-sun' : 'bi-moon-stars'"></i>
+    </button>
+  </nav>
+
+
+<div class="container">
+<div class="filter-card">
+  <div class="row g-3 text-center align-items-end">
+
+    <!-- 🔹 AI RECOMMENDATION (TOP) -->
+    <div class="col-12">
+      <h6>Describe Symptoms</h6>
+      <textarea id="symptoms"
+                class="form-control"
+                placeholder="e.g. fever, headache, body pain"></textarea>
+
+      <button class="btn btn-primary mt-2" onclick="getAI()">
+        <i class="bi bi-cpu"></i> Recommend Medicine
+      </button>
+
+      <div id="result" class="mt-2 fw-semibold text-success"></div>
+    </div>
+
+    <hr class="my-3">
+
+    <!-- 🔹 SELECT CITY -->
+    <div class="col-md-4 col-12">
+      <h6>Select City</h6>
+      <select class="form-select"
+              ng-options="obj.city for obj in cityJSONAry"
+              ng-model="selCity">
+        <option value="">Choose City</option>
+      </select>
+    </div>
+
+    <!-- 🔹 SELECT MEDICINE -->
+    <div class="col-md-4 col-12">
+      <h6>Select Medicine</h6>
+      <select class="form-select"
+              ng-options="obj.medicinename for obj in medJSONAry"
+              ng-model="selMed">
+        <option value="">Choose Medicine</option>
+      </select>
+    </div>
+
+    <!-- 🔹 SHOW DONORS -->
+    <div class="col-md-4 col-12">
+      <button class="btn btn-primary w-100 mt-4"
+              ng-click="fetchDonors()">
+        <i class="bi bi-search"></i> Show Donors
+      </button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+  <!-- Loader -->
+  <div class="container text-center my-5" ng-if="loading">
+    <div class="loader"></div>
+    <p class="mt-3">Fetching donors...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="container text-center my-5"
+       ng-if="!loading && JsonArr3.length === 0">
+    <i class="bi bi-info-circle fs-1 text-muted"></i>
+    <h5 class="mt-3">No donors found</h5>
+    <p class="text-muted">Try changing city or medicine</p>
+  </div>
+
+  <!-- Donor Cards -->
+  <div class="container my-4">
+    <div class="row g-4">
+      <div class="col-md-4 col-sm-6 col-12" ng-repeat="obj in JsonArr3">
+        <div class="card donor-card">
+          <img src="pics/needy profile.gif">
+          <div class="card-body text-center">
+            <h5>{{obj.medicinename}}</h5>
+            <p class="text-muted">{{obj.city}}</p>
+
+            <button class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#modal{{$index}}">
+              View Details
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal{{$index}}">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Donor Details</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <p><b>Email:</b> {{obj.email}}</p>
+                <p><b>Address:</b> {{obj.address}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

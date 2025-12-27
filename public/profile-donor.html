@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donor Profile | HelpRX</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<style>
+body{
+  background:#f6f8fb;
+  font-family:Poppins, sans-serif;
+}
+
+/* NAVBAR */
+.navbar{
+  background:#FFFACD;
+  padding:10px 20px;
+}
+
+/* CARD */
+.profile-card{
+  background:#fff;
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 15px 45px rgba(0,0,0,0.15);
+}
+
+/* PREVIEW */
+#idPreview{
+  max-width:100%;
+  max-height:220px;
+  border-radius:12px;
+  border:2px dashed #aaa;
+  padding:6px;
+}
+
+/* TOAST */
+#toast{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  background:#28a745;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:8px;
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar d-flex">
+  <img src="pics/Navbarlogo-2.png" width="80">
+  <span class="fw-bold">Donor Profile</span>
+  <button class="btn btn-outline-danger ms-auto" id="logout">Logout</button>
+</nav>
+
+<!-- ================= PROFILE FORM ================= -->
+<div class="container mt-4 pb-5">
+<div class="row justify-content-center">
+<div class="col-md-8">
+
+<form method="post" enctype="multipart/form-data">
+
+<div class="profile-card">
+
+<h4 class="text-center mb-4">Donor Profile Details</h4>
+
+<!-- EMAIL -->
+<div class="row">
+  <div class="col-md-9">
+    <label>Email</label>
+    <input class="form-control mb-2" name="txtEmail" id="txtEmail" readonly>
+  </div>
+  <div class="col-md-3">
+    <button type="button" class="btn btn-primary w-100 mt-4" id="txtfetch">
+      Fetch
+    </button>
+  </div>
+</div>
+
+<!-- NAME & MOBILE -->
+<div class="row">
+  <div class="col-md-6">
+    <label>Name</label>
+    <input class="form-control mb-2" id="txtName" name="txtName">
+  </div>
+  <div class="col-md-6">
+    <label>Mobile</label>
+    <input class="form-control mb-2" id="txtmob" name="txtmob">
+  </div>
+</div>
+
+<!-- STATE & CITY -->
+<div class="row">
+  <div class="col-md-6">
+    <label>State</label>
+    <input class="form-control mb-2" id="txtstate" name="txtstate">
+  </div>
+  <div class="col-md-6">
+    <label>City</label>
+    <input class="form-control mb-2" id="txtcity" name="txtcity">
+  </div>
+</div>
+
+<!-- ADDRESS -->
+<div class="row">
+  <div class="col-md-12">
+    <label>Address</label>
+    <input class="form-control mb-3" id="txtadd" name="txtadd">
+  </div>
+</div>
+
+<!-- ID PROOF -->
+<div class="row align-items-center">
+  <div class="col-md-6">
+    <label>ID Proof Type</label>
+    <select class="form-select mb-2" name="txtid" id="txtid">
+      <option>Aadhar Card</option>
+      <option>Voter ID</option>
+      <option>PAN Card</option>
+    </select>
+  </div>
+
+  <div class="col-md-6">
+    <label>Upload ID Proof</label>
+    <!-- 🔥 SAME NAME AS NEEDY PROFILE -->
+    <input type="file"
+           name="ppic"
+           accept="image/*"
+           onchange="dopreviewID(this,idPreview)">
+  </div>
+</div>
+
+<!-- ID PREVIEW -->
+<div class="text-center mt-3">
+  <img id="idPreview" class="d-none">
+</div>
+
+<!-- AVAILABILITY -->
+<div class="row mt-3">
+  <div class="col-md-6">
+    <select class="form-select mb-2" id="txtfrm" name="txtfrm">
+      <option>From</option>
+      <option>10 AM</option>
+    </select>
+  </div>
+  <div class="col-md-6">
+    <select class="form-select mb-2" id="txtto" name="txtto">
+      <option>To</option>
+      <option>8 PM</option>
+    </select>
+  </div>
+</div>
+
+<!-- ACTION -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <button type="submit" class="btn btn-primary w-100 mt-4" onclick="saveProfile()">
+      Save
+    </button>
+  </div>
+  <div class="col-md-6">
+    <button type="submit" class="btn btn-primary w-100 mt-4" onclick="updateProfile()">
+      Update
+    </button>
+  </div>
+</div>
+
+</div>
+</form>
+</div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">Profile Saved Successfully ✅</div>
+
+<!-- ================= JS ================= -->
+<script>
+
+/* AUTH */
+if(!localStorage.getItem("activeKuch"))
+  location.href="index.html";
+
+$("#txtEmail").val(localStorage.getItem("activeKuch"));
+
+/* LOGOUT */
+$("#logout").click(()=>{
+  localStorage.removeItem("activeKuch");
+  location.href="index.html";
+});
+
+/* ID PREVIEW */
+// function dopreviewID(input){
+//   const file=input.files[0];
+//   if(file){
+//     $("#idPreview").attr("src",URL.createObjectURL(file)).removeClass("d-none");
+//   }
+// }
+
+function doPreviewID(refFile, prevImg) {
+        const [file] = refFile.files
+        if (file) {
+            prevImg.src = URL.createObjectURL(file)
+        }
+    }
+
+/* SAVE / UPDATE UI */
+function saveProfile(){
+  $("#toast").fadeIn().delay(1500).fadeOut();
+}
+function updateProfile(){
+  $("#toast").fadeIn().delay(1500).fadeOut();
+}
+
+/* FETCH BUTTON WORKING*/
+$("#txtfetch").click(function () {
+
+  let email = $("#txtEmail").val();
+
+  $.ajax({
+    url: "/getrecords",
+    type: "get",
+    data: { txtEmail: email }   // ✅ MATCHES BACKEND
+  })
+  .done(function (jsonArr) {
+
+    if (jsonArr.length === 0) {
+      alert("No profile found");
+      return;
+    }
+
+    let obj = jsonArr[0];
+
+    $("#txtName").val(obj.name);
+    $("#txtmob").val(obj.mobile);
+    $("#txtstate").val(obj.userstate);
+    $("#txtcity").val(obj.city);
+    $("#txtadd").val(obj.address);
+    $("#txtid").val(obj.idproof);
+    $("#txtfrm").val(obj.frm);
+    $("#txtto").val(obj.too);
+
+    if(obj.id_proof_pic && obj.id_proof_pic !== "nopic.jpg"){
+  $("#idPreview")
+    .attr("src", "uploads/" + obj.id_proof_pic)
+    .removeClass("d-none");
+}
+
+  })
+  .fail(function (err) {
+    alert("Fetch failed");
+    console.log(err);
+  });
+
+});
+
+</script>
+
+</body>
+</html>

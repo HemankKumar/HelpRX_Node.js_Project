@@ -1,0 +1,316 @@
+/* ===============================
+   CSS VARIABLES (Light Mode)
+================================ */
+:root {
+  --bg-color: #f4f7fb;
+  --text-color: #212529;
+  --card-bg: #ffffff;
+  --navbar-bg: linear-gradient(135deg, #4facfe, #00f2fe);
+  --section-bg: #f4f7fb;
+  --shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* ===============================
+   DARK MODE VARIABLES
+================================ */
+body.dark {
+  --bg-color: #121212;
+  --text-color: #f1f1f1;
+  --card-bg: #1e1e1e;
+  --navbar-bg: linear-gradient(135deg, #1f1f1f, #2b2b2b);
+  --section-bg: #121212;
+  --shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+
+/* ===============================
+   GLOBAL
+================================ */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Poppins', sans-serif;
+  transition: back-ground 0.3s, color 0.3s;
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+.navbar {
+  background: var(--navbar-bg);
+}
+
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: #fff !important;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn-round {
+  border-radius: 25px;
+  padding: 8px 18px;
+  transition: all 0.3s;
+}
+
+.btn-round:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* ===============================
+   HERO
+================================ */
+.hero-img {
+  height: 60vh;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .hero-img {
+    height: 40vh;
+  }
+}
+
+.hero-overlay {
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+/* ===============================
+   SECTIONS
+================================ */
+.section-title {
+  font-weight: 600;
+  margin: 40px 0 25px;
+  text-align: center;
+}
+
+/* ===============================
+   CARDS
+================================ */
+.card {
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+  border: none;
+}
+
+.service-card img {
+  height: 170px;
+  object-fit: cover;
+  border-radius: 15px 15px 0 0;
+}
+
+/* ===============================
+   FOOTER BOX
+================================ */
+.footer-box {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+}
+
+
+
+/* GLASS EFFECT */
+.signup-glass{
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(15px);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+/* INPUT ICONS */
+.input-group-text{
+  background:#f1f3f5;
+  border: none;
+}
+
+/* PASSWORD BOX */
+.password-box{
+  position: relative;
+}
+.password-box .eye{
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.7;
+}
+.password-box .eye:hover{
+  opacity: 1;
+}
+
+/* ERRORS */
+.error{
+  font-size: 12px;
+  color:#dc3545;
+  display:none;
+  margin-bottom: 6px;
+}
+
+/* SIGNUP BUTTON */
+.signup-btn{
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+.signup-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(13,110,253,0.4);
+}
+
+/* DARK MODE */
+body.dark .signup-glass{
+  background: rgba(30,30,30,0.9);
+  color: #eee;
+}
+body.dark .input-group-text{
+  background:#222;
+  color:#fff;
+}
+
+
+
+/* SIGNUP SUCCESS ANIMATION */
+.signup-success{
+  text-align:center;
+  margin-top:20px;
+  animation: fadeInScale 0.5s ease;
+}
+
+.checkmark{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#28a745;
+  color:#fff;
+  font-size:36px;
+  line-height:70px;
+  margin:0 auto 10px;
+  animation: pop 0.5s ease;
+}
+
+@keyframes pop{
+  0%{transform:scale(0.5);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+
+@keyframes fadeInScale{
+  from{opacity:0;transform:scale(0.9)}
+  to{opacity:1;transform:scale(1)}
+}
+
+
+/* Glass effect */
+.glass-modal{
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Input */
+.input-group-text{
+  border-radius: 12px;
+}
+
+.form-control{
+  border-radius: 12px;
+}
+
+.form-control:focus{
+  box-shadow: 0 0 0 0.2rem rgba(25,135,84,.25);
+}
+
+/* Icons */
+.pointer{
+  cursor: pointer;
+}
+
+/* Errors */
+small.text-danger{
+  font-size: 13px;
+}
+
+
+.modal.fade .modal-dialog{
+  transform: scale(0.9);
+  transition: transform 0.25s ease;
+}
+
+.modal.show .modal-dialog{
+  transform: scale(1);
+}
+
+.modal-content.glass-modal{
+  background: rgba(255,255,255,0.75) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.modal-content{
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+
+/* ===== LOGIN ANIMATIONS ===== */
+
+.login-anim p{
+  font-size:14px;
+  color:#6c757d;
+}
+
+.login-success{
+  animation: fadeInScale 0.4s ease;
+}
+
+.login-success .checkmark{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#28a745;
+  color:#fff;
+  font-size:36px;
+  line-height:70px;
+  margin:0 auto 10px;
+  animation: pop 0.4s ease;
+}
+
+/* Shake on error */
+.shake{
+  animation: shake 0.4s;
+}
+
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-6px)}
+  100%{transform:translateX(0)}
+}
+
+@keyframes pop{
+  0%{transform:scale(0.5);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+
+@keyframes fadeInScale{
+  from{opacity:0;transform:scale(0.9)}
+  to{opacity:1;transform:scale(1)}
+}
+
+
+
+
