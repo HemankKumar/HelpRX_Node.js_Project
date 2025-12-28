@@ -23,7 +23,7 @@ app.get("/", function (req, resp) {
 //=============DB OPERATIONS=============================
 //=============DATABASE CONNECTIVITY====================
 
-var dbConfig = {
+var db = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
