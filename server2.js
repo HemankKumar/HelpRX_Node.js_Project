@@ -1,6 +1,6 @@
 var express = require("express");
 var fileuploader = require("express-fileupload");// used to upload file
-const mysql = require("mysql");
+const mysql = require("mysql2");
 var app = express();
 var cors=require('cors'); 
 
@@ -23,7 +23,29 @@ app.get("/", function (req, resp) {
 //=============DB OPERATIONS=============================
 //=============DATABASE CONNECTIVITY====================
 
-var dbConfig = {
+// var dbConfig = {
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   port: process.env.DB_PORT,
+//   ssl: {
+//     rejectUnauthorized: false
+//   },
+//   dateStrings: true
+// }
+
+// var dbCon = mysql.createConnection(dbConfig);
+// dbCon.connect(function (err) {
+//   if (err) {
+//     console.error("❌ DB connection failed:", err);
+//   } else {
+//     console.log("✅ Connected to MySQL on Aiven");
+//   }
+// });
+
+
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -32,15 +54,16 @@ var dbConfig = {
   ssl: {
     rejectUnauthorized: false
   },
-  dateStrings: true
-}
+  waitForConnections: true,
+  connectionLimit: 10,
+});
 
-var dbCon = mysql.createConnection(dbConfig);
-dbCon.connect(function (err) {
+db.getConnection((err, connection) => {
   if (err) {
-    console.error("❌ DB connection failed:", err);
+    console.error("❌ MySQL Connection Failed:", err.message);
   } else {
-    console.log("✅ Connected to MySQL on Aiven");
+    console.log("✅ Connected to MySQL (Aiven)");
+    connection.release();
   }
 });
 
