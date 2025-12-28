@@ -575,17 +575,30 @@ app.get("/fetch-donors",function(req,resp)
 
 
 app.post("/ai-recommend", async (req, res) => {
-  const symptoms = req.body.symptoms;
+  try {
+    const { symptoms } = req.body;
 
-  const response = await fetch("http://127.0.0.1:5000/recommend", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ symptoms })
-  });
+    const response = await fetch(
+      "https://helprx-ai.onrender.com/recommend",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symptoms })
+      }
+    );
 
-  const aiResult = await response.json();
-  res.send(aiResult);
+    const aiResult = await response.json();
+    res.json(aiResult);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "AI service unavailable"
+    });
+  }
 });
+
 
 
 //==================ChatBot Working==============================================
