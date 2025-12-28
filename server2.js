@@ -23,29 +23,7 @@ app.get("/", function (req, resp) {
 //=============DB OPERATIONS=============================
 //=============DATABASE CONNECTIVITY====================
 
-// var dbConfig = {
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_NAME,
-//   port: process.env.DB_PORT,
-//   ssl: {
-//     rejectUnauthorized: false
-//   },
-//   dateStrings: true
-// }
-
-// var dbCon = mysql.createConnection(dbConfig);
-// dbCon.connect(function (err) {
-//   if (err) {
-//     console.error("❌ DB connection failed:", err);
-//   } else {
-//     console.log("✅ Connected to MySQL on Aiven");
-//   }
-// });
-
-
-const db = mysql.createPool({
+var dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -54,18 +32,20 @@ const db = mysql.createPool({
   ssl: {
     rejectUnauthorized: false
   },
-  waitForConnections: true,
-  connectionLimit: 10,
-});
+  dateStrings: true
+}
 
-db.getConnection((err, connection) => {
+var dbCon = mysql.createConnection(dbConfig);
+dbCon.connect(function (err) {
   if (err) {
-    console.error("❌ MySQL Connection Failed:", err.message);
+    console.error("❌ DB connection failed:", err);
   } else {
-    console.log("✅ Connected to MySQL (Aiven)");
-    connection.release();
+    console.log("✅ Connected to MySQL on Aiven");
   }
 });
+
+
+
 
 
 
