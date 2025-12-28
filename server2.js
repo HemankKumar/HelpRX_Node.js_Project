@@ -1,6 +1,6 @@
 var express = require("express");
 var fileuploader = require("express-fileupload");// used to upload file
-var mysql = require("mysql");
+const mysql = require("mysql");
 var app = express();
 var cors=require('cors'); 
 
@@ -24,20 +24,25 @@ app.get("/", function (req, resp) {
 //=============DATABASE CONNECTIVITY====================
 
 var dbConfig = {
-  host: "127.0.0.1",
-  user: "root",
-  password: "123456",
-  database: "sign",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  ssl: {
+    rejectUnauthorized: false
+  },
   dateStrings: true
 }
 
-var dbCon = mysql.createConnection(dbConfig);
-dbCon.connect(function (jasoos) {
-  if (jasoos == null)
-    console.log("SQL Connected Successfully");
-  else
-    console.log(jasoos);
+db.getConnection((err) => {
+  if (err) {
+    console.error("❌ DB connection failed:", err);
+  } else {
+    console.log("✅ Connected to MySQL on Aiven");
+  }
 });
+
 
 
 
