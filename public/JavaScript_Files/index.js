@@ -49,43 +49,45 @@ $("#dosub").click(function () {
     return;
   }
 
-  $.ajax({
-    type: "get",
-    url: "/signup",
-    data: {
-      kuchemail: email,
-      kuchpass: pwd,
-      kuchtype: type
-    }
-  })
-  .done(function (resp) {
+ $.ajax({
+  type: "get",
+  url: "/signup",
+  data: {
+    kuchemail: email,
+    kuchpass: pwd,
+    kuchtype: type
+  },
+  dataType: "json"   // ✅ IMPORTANT
+})
+.done(function (resp) {
 
-    if(resp.includes("Record Saved")){
-      
-      // ✅ SHOW SUCCESS ANIMATION
-      $("#signupSuccess").removeClass("d-none");
-      $("#sp").html("");
+  if (resp.success) {   // ✅ FIXED CONDITION
+    
+    // ✅ SHOW SUCCESS ANIMATION
+    $("#signupSuccess").removeClass("d-none");
+    $("#sp").html("");
 
-      // ✅ AUTO LOGIN
-      localStorage.setItem("activeKuch", email);
-      localStorage.setItem("userType", type);
+    // ✅ AUTO LOGIN
+    localStorage.setItem("activeKuch", email);
+    localStorage.setItem("userType", type);
 
-      // ⏳ SHORT DELAY → REDIRECT
-      setTimeout(() => {
-        if(type === "Donor")
-          location.href = "dash-donor.html";
-        else
-          location.href = "dash-needy.html";
-      }, 1800);
+    // ⏳ SHORT DELAY → REDIRECT
+    setTimeout(() => {
+      if (type === "Donor")
+        location.href = "dash-donor.html";
+      else
+        location.href = "dash-needy.html";
+    }, 1800);
 
-    }
-    else{
-      $("#sp").html(resp).css("color","red");
-    }
-  })
-  .fail(function (err) {
-    $("#sp").html("Server Error").css("color","red");
-  });
+  }
+  else {
+    $("#sp").html(resp.message).css("color", "red");
+  }
+})
+.fail(function (err) {
+  $("#sp").html("Server Error").css("color", "red");
+});
+
 
 });
 

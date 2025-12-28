@@ -58,10 +58,17 @@ app.get("/signup", function (req, resp) {
   var type = req.query.kuchtype;
 
   dbCon.query("insert into signup(email,pass,type,status,doj) values(?,?,?,1,current_date())", [email, pass, type], function (err) {
-    if (err == null)
-      resp.send("Record Saved");
-    else
-      resp.send(err);
+      if (err) {
+        resp.json({
+          success: false,
+          message: err.message
+        });
+      } else {
+        resp.json({
+          success: true,
+          message: "Record saved successfully"
+        });
+      }
 
   });
 
