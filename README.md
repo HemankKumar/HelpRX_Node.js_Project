@@ -9,7 +9,6 @@ The platform integrates secure backend services, cloud-hosted databases, and AI-
 
 🔗 **Live Application:**  
 https://helprx-node-js-project.onrender.com  
-*(Replace with your exact Render URL if different)*
 
 ---
 
