@@ -577,37 +577,33 @@ app.get("/fetch-donors",function(req,resp)
 app.post("/ai-recommend", async (req, res) => {
   try {
     const symptoms = req.body?.symptoms;
+
     if (!symptoms) {
-      return res.status(400).json({ success: false, message: "Symptoms required" });
+      return res.status(400).json({ message: "Symptoms required" });
     }
 
     const response = await fetch("https://helprx-ai.onrender.com/recommend", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ symptoms }),
+      body: JSON.stringify({ symptoms })
     });
 
-    const text = await response.text();   // 👈 READ AS TEXT FIRST
+    const text = await response.text();
 
     try {
-      const json = JSON.parse(text);       // 👈 TRY JSON
-      return res.json(json);
+      const json = JSON.parse(text);
+      res.json(json);
     } catch {
       console.error("AI returned non-JSON:", text);
-      return res.status(500).json({
-        success: false,
-        message: "AI service error"
-      });
+      res.status(500).json({ message: "AI error" });
     }
 
   } catch (err) {
-    console.error("AI Recommend Fatal:", err);
-    res.status(500).json({
-      success: false,
-      message: "AI service unreachable"
-    });
+    console.error("AI Recommend Error:", err);
+    res.status(500).json({ message: "AI service unreachable" });
   }
 });
+
 
 
 
